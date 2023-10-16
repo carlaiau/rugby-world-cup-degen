@@ -9,9 +9,8 @@ The Server pulls odds from the-odds-api.com and the NZ TAB private API every 5 m
 Client will keep pinging the server every minute whilst the react app is running.
 
 ### Screenshot
-<img width="100%" alt="Screenshot 2023-10-17 at 12 30 15 AM" src="https://github.com/carlaiau/rugby-world-cup-degen/assets/6896663/f1859d4a-ac7c-4660-bce1-be73f5f43480">
-
-
+<img width="600" alt="Screenshot 2023-10-17 at 12 28 33 AM" src="https://github.com/carlaiau/rugby-world-cup-degen/assets/6896663/0b806db8-37f0-4c63-bcfb-a56f0c4fd3ca">
+<img width="600" alt="Screenshot 2023-10-17 at 12 28 48 AM" src="https://github.com/carlaiau/rugby-world-cup-degen/assets/6896663/6ffe550a-11f4-495f-aa30-3b4cdfc55849">
 
 ### Expectations:
 
