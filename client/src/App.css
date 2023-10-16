@@ -1,0 +1,126 @@
+body{
+  background: #eee;  
+  margin: 0;
+  font-size: 12px;
+  
+}
+.app{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 10px;
+
+}
+
+.container{
+  width: 49.5%;
+  min-width: 320px;
+  margin-bottom: 50px;
+  padding-bottom: 0;
+}
+@media screen and (max-width: 500px){
+  .container{
+    width: 100%;
+    min-width: 100%;
+    
+  }  
+}
+
+.title-container{
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px;
+}
+
+table{
+  width: 100%;
+  text-align: right;
+  border-spacing: 0;
+  background: #fff;
+  margin-bottom: 10px;
+  color: #000;
+  text-transform: uppercase;
+}
+
+
+table th{
+  background-color: #000;
+  padding: 0.25em 0.5em;
+  color: #fff;
+}
+table th .title{
+  font-size: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+th .time {
+  font-size: 11px;
+}
+table th.spread{
+  font-size: 20px;
+  background-color: red;
+  color: #000;
+}
+table th.okay {
+  background-color: yellow;
+}
+table th.good{
+  background-color: greenyellow;
+
+}
+
+table td{
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 0.5em 0.25em;
+
+}
+table td:first-of-type{
+  text-align: left;
+  text-transform: uppercase;
+}
+table .with-account{
+  font-weight: 600;
+}
+table .with-account td{
+  background-color: rgba(0, 255, 0, 0.05);
+}
+table .with-account td a{
+  color: #000;
+}
+
+table tr:nth-child(even) {
+  background-color: rgba(0,0,0,0.05);
+}
+
+table th:first-of-type{
+  text-align: left;
+}
+
+h3{
+  font-weight: 600;
+  text-transform: uppercase;
+}
+h3 .is-live{
+  background-color: red;
+  padding: 10px;
+  margin-right: 10px;
+  color: #fff;
+  border-radius: 5px;
+}
+h3.date{
+  text-align: right;
+}
+
+.container.is-live{
+  background-color: rgba(126, 0, 0, 0.25);
+  border-radius: 5px;
+  border: 1px solid red;
+}
+td.odds{
+  font-size: 13px;
+  text-align: right;
+  font-weight: 400;
+  padding-right: 5px;
+}
