@@ -8,7 +8,6 @@ import (
 	"sort"
 	"time"
 
-	"github.com/carlaiau/degen/tab"
 	"github.com/carlaiau/degen/types"
 
 	the_odds_api "github.com/carlaiau/degen/the-odds-api"
@@ -28,10 +27,12 @@ type proxyIp struct {
 
 func getData() {
 
-	err := tab.Scraper(currentEvents)
-	if err != nil {
-		fmt.Printf("Error scraping TAB: %v", err)
-	}
+	/*
+		err := tab.Scraper(currentEvents)
+		if err != nil {
+			fmt.Printf("Error scraping TAB: %v", err)
+		}
+	*/
 
 	the_odds_api.Scrapper(currentEvents)
 }

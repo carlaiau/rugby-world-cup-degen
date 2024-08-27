@@ -6,22 +6,32 @@ import './App.css';
 const API_ADDRESS = "http://localhost:8080/"
 
 const SPORTSBOOK_WITH_ACCOUNT = {
-  "NZ TAB": "https://www.tab.co.nz/sports/competition/18525/rugby-union/international/world-cup-2023/matches",
-  "SportsBet": "https://www.sportsbet.com.au/betting/rugby-union/world-cup-2023",
-  "TopSport": "https://www.topsport.com.au/Sport/Rugby_Union/Rugby_World_Cup_Matches/Matches",
-  "Pinnacle": "https://www.pinnacle.com/en/rugby-union/rugby-world-cup/matchups/",
-  "Unibet": "https://www.unibet.com.au/betting/sports/filter/rugby_union/rugby_world_cup_2023/all/matches"
+  //"NZ TAB": "https://www.tab.co.nz/sports/competition/18525/rugby-union/international/world-cup-2023/matches", Baanned
+  "SportsBet": "https://www.sportsbet.com.au/betting/rugby-league/nrl",
+  "TopSport": "https://www.topsport.com.au/Sport/Rugby_League/",
+  "Pinnacle": "https://www.pinnacle.com/en/rugby-league/nrl/matchups",
+  "Unibet": "https://www.unibet.com.au/betting/sports/filter/rugby_league/nrl/all/matches"
 }
+
+const bookiesToRemove = [
+  "Bet Right",
+  "PlayUp",
+  "PointsBet (AU)",
+  "TABtouch",
+  "TAB",
+  "Betr"
+]
 
 const renderMarkets = (event, key) => {
   const sortedMarkets = event.marketsByName[key].
-  sort((a, b) => a.bookmaker.localeCompare(b.bookmaker)).
-  sort((a, b) => a.line - b.line)
-  if(!sortedMarkets.length)
-  return
+    sort((a, b) => a.bookmaker.localeCompare(b.bookmaker)).
+    sort((a, b) => a.line - b.line)
+    .filter(b => !bookiesToRemove.includes(b.bookmaker))
+  if (!sortedMarkets.length)
+    return
   const bestSpreadDifference = sortedMarkets[sortedMarkets.length - 1].line - sortedMarkets[0].line
 
-  const spreadClass = bestSpreadDifference > 3.5 ? 'good' : bestSpreadDifference > 1.5 ? 'okay': ''
+  const spreadClass = bestSpreadDifference > 3.5 ? 'good' : bestSpreadDifference > 1.5 ? 'okay' : ''
 
   return (
     <>
@@ -30,16 +40,16 @@ const renderMarkets = (event, key) => {
           <th colSpan={2}>
             <div className="title">
               {key}
-              <span className="time">updated at {format(new Date(sortedMarkets[0].last_update), 'hh:mm')} / {format(new Date(sortedMarkets[sortedMarkets.length-1].last_update), 'hh:mm')}</span>
+              <span className="time">updated at {format(new Date(sortedMarkets[0].last_update), 'hh:mm')} / {format(new Date(sortedMarkets[sortedMarkets.length - 1].last_update), 'hh:mm')}</span>
             </div>
           </th>
           <th colSpan={1} className={'spread ' + spreadClass}>Δ {bestSpreadDifference}</th>
         </tr>
-        { key != "Total" ?
+        {key != "Total" ?
           <tr>
             <th>Bookie</th>
             <th>Handicap</th>
-            
+
             <th>Odds</th>
             {
               /*
@@ -49,52 +59,54 @@ const renderMarkets = (event, key) => {
             }
 
           </tr>
-          : 
+          :
           <></>
         }
-        
+
       </thead>
       <tbody>
-      {sortedMarkets.map(
-        (market) => {
+        {sortedMarkets
+          .map(
+            (market) => {
+              if (bookiesToRemove.includes(market.bookmaker))
+                return
+              const link = SPORTSBOOK_WITH_ACCOUNT[market.bookmaker]
+              let juice = 0
+              market.outcomes.forEach((outcome) => {
+                juice += 1 / outcome.price
+              })
+              return (
+                <tr className={link ? 'with-account' : ""}>
+                  <td>
+                    {link ?
+                      <a href={link} target="_blank">
+                        {market.bookmaker}
+                      </a>
+                      :
+                      market.bookmaker
+                    }
+                  </td>
 
-          const link = SPORTSBOOK_WITH_ACCOUNT[market.bookmaker]
-          let juice = 0
-          market.outcomes.forEach((outcome) => {
-            juice += 1/outcome.price
-          })
-          return (
-            <tr className={link ? 'with-account': ""}>
-              <td>
-                { link ? 
-                <a href={link} target="_blank">
-                  {market.bookmaker}
-                </a>
-                  :
-                  market.bookmaker
-                }
-              </td>
-              
-              <td>{market.line.toFixed(1)}</td>
-              
-              <td className="odds">
-              {
-                market.outcomes.map((outcome, index) => {
-                  return (
-                    <span>
-                      {outcome.price.toFixed(2)}
-                      {index == 0 ? '/' : ''}
-                     
-                    </span>
-                    
-                  )
-                })
-              }
-              </td>
-              
-            </tr>
-          )
-        })}
+                  <td>{market.line.toFixed(1)}</td>
+
+                  <td className="odds">
+                    {
+                      market.outcomes.map((outcome, index) => {
+                        return (
+                          <span>
+                            {outcome.price.toFixed(2)}
+                            {index == 0 ? '/' : ''}
+
+                          </span>
+
+                        )
+                      })
+                    }
+                  </td>
+
+                </tr>
+              )
+            })}
       </tbody>
     </>
   )
@@ -105,15 +117,15 @@ function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    
+
 
     fetchData();
     const intervalId = setInterval(() => {
-      
+
       fetchData()
     }, 60000);
     return () => clearInterval(intervalId);
-    
+
 
   }, []);
 
@@ -126,9 +138,9 @@ function App() {
     setLoading(false)
     setData(response.data)
   };
-  
 
-  if(data.length == 0){
+
+  if (data.length == 0) {
 
     return (
       <div className="App">
@@ -150,10 +162,10 @@ function App() {
   // determine if we need to flip flop the TAB's handicap
   data.forEach((event) => {
 
-    
+
     let negativeCount = 0
-    let positiveCount = 0 
-    
+    let positiveCount = 0
+
     event.marketsByName['Line'].forEach((market) => {
       if (market.bookmaker === 'NZ TAB') {
         return
@@ -161,9 +173,9 @@ function App() {
       if (market.line < 0) {
         negativeCount++
       }
-      else if(market.line > 0) {
+      else if (market.line > 0) {
         positiveCount++
-      
+
       }
     })
     if (negativeCount > positiveCount) {
@@ -187,52 +199,52 @@ function App() {
 
     // 
   })
-  
+
   return (
 
     <div className="app">
-    
-    {
-    data.sort((a, b) => {
-      const timeA = new Date(a.startTime).getTime();
-      const timeB = new Date(b.startTime).getTime();
-      return timeA - timeB;
-    }).map((event, index) => {
 
-      const startTime =  new Date(event.startTime).getTime();
-      const currentTime = new Date().getTime();
-      let isLive = false
-      const timeUntil = currentTime - startTime;
-      if(startTime < currentTime){
-        isLive = true
+      {
+        data.sort((a, b) => {
+          const timeA = new Date(a.startTime).getTime();
+          const timeB = new Date(b.startTime).getTime();
+          return timeA - timeB;
+        }).map((event, index) => {
+
+          const startTime = new Date(event.startTime).getTime();
+          const currentTime = new Date().getTime();
+          let isLive = false
+          const timeUntil = currentTime - startTime;
+          if (startTime < currentTime) {
+            isLive = true
+          }
+          return (
+            <div className={isLive ? 'container is-live' : 'container'}>
+              <div className="title-container">
+                <h3 key={event.name}>{event.name}</h3>
+                <h3 className="date">{isLive ?
+                  <span className="is-live">Live</span>
+                  : <></>
+                }{
+                    format(new Date(event.startTime), 'EEE, dd MMM HH:mm')}
+                  <br />
+                  {formatDistance(startTime, currentTime, { includeSuffix: true })}
+
+                </h3>
+              </div>
+
+              <table style={{ width: "100%" }}>
+                {
+                  renderMarkets(event, "Line")
+                }
+                {
+                  renderMarkets(event, "Total")
+                }
+              </table>
+            </div>
+          )
+        })
       }
-      return(
-        <div className={isLive ? 'container is-live' : 'container'}>
-          <div className="title-container">
-            <h3 key={event.name}>{event.name}</h3>
-            <h3 className="date">{isLive ? 
-              <span className="is-live">Live</span>
-              : <></>
-              }{
-                format(new Date(event.startTime), 'EEE, dd MMM HH:mm')}
-                <br/>
-                {formatDistance(startTime, currentTime, {includeSuffix: true})}
-              
-            </h3>
-          </div>
-          
-          <table style={{ width: "100%" }}>
-          {
-            renderMarkets(event, "Line")
-          }
-          {
-            renderMarkets(event, "Total")
-          }
-          </table>
-        </div>
-      )
-    })
-    }
     </div>
   )
 }

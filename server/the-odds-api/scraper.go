@@ -14,7 +14,7 @@ import (
 
 const (
 	API_URL   = "https://api.the-odds-api.com/v4"
-	SPORT_KEY = "rugbyunion_world_cup"
+	SPORT_KEY = "rugbyleague_nrl"
 )
 
 func Scrapper(currentEvents map[string]types.DegenEvent) error {
@@ -26,7 +26,7 @@ func Scrapper(currentEvents map[string]types.DegenEvent) error {
 
 	API_KEY := os.Getenv("THE_ODDS_API_KEY")
 
-	url := fmt.Sprintf("%s/sports/%s/odds/?regions=us,us2,uk,au,eu&oddsFormat=decimal&apiKey=%s&markets=totals,spreads", API_URL, SPORT_KEY, API_KEY)
+	url := fmt.Sprintf("%s/sports/%s/odds/?regions=au&oddsFormat=decimal&apiKey=%s&markets=totals,spreads", API_URL, SPORT_KEY, API_KEY)
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Fatalf("Error fetching data from API: %v", err)
